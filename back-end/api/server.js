@@ -1,20 +1,25 @@
 import express from "express";
-import { artistArray } from "../../front-end/src/assets/database/artists.js";
-import { songsArray } from "../../front-end/src/assets/database/songs.js";
+import cors from "cors";
+import { db } from "./connect.js";
 
 const app = express();
 const PORT = 3000;
+
+app.use(cors());
+// app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
 
-app.get("/artists", (req, res) => {
-  res.send(artistArray);
+app.get("/artists", async (req, res) => {
+  const artists = await db.collection("artists").find({}).toArray();
+  res.send(artists);
 });
 
-app.get("/songs", (req, res) => {
-  res.send(songsArray);
+app.get("/songs", async (req, res) => {
+  const songs = await db.collection("songs").find({}).toArray();
+  res.send(songs);
 });
 
 app.listen(PORT, () => {
